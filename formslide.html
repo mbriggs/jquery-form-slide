@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>
+            Formslide
+        </title>
+        <link rel='stylesheet' type='text/css' href='/stylesheets/jquery.form-slide.css' />
+        <script language='javascript' type='text/javascript' src='/javascripts/jquery.js'></script>
+        <script language='javascript' type='text/javascript' src='/javascripts/jquery.form-slide.js'></script>
+
+        <script language='javascript' type='text/javascript'>
+            $(function() {
+                $('#test').formslide();
+                $('.next').click(function() { $('#test').formslide.next(); return false; });
+                $('.previous').click(function() { $('#test').formslide.previous(); return false; });
+                $('#slide1').click(function() { $('#test').formslide.slideTo(1); return false; });
+                $('#slide2').click(function() { $('#test').formslide.slideTo(2); return false; });
+                $('#slide3').click(function() { $('#test').formslide.slideTo(3); return false; });
+
+                // test events
+                $(window).bind('formslide:initialize', function(){ console.log('initialized!'); }); 
+                $('.formslide div').bind('formslide:beforeSlide', function(e, args) { 
+                  console.log(e.target.children[0].innerText + ': before!'); 
+                }); 
+                $('.formslide div').bind('formslide:afterSlide', function(e) { 
+                  console.log(e.target.children[0].innerText + ': after!'); 
+                }); 
+            });
+        </script>
+    </head>
+    <body>
+        <form id='test' style='width: 50%; margin: auto'>
+            <div>
+                <h1>Step 1</h1>
+                <input /><br />
+                <input /><br />
+                <input /><br />
+                <button class='next'>next</button>
+                <button class='previous'>previous</button>
+            </div>
+            <div>
+                <h1>Step 2</h1>
+                <input /><br />
+                <input /><br />
+                <input /><br />
+                <button class='next'>next</button>
+                <button class='previous'>previous</button>
+            </div>
+            <div>
+                <h1>Step 3</h1>
+                <input /><br />
+                <input /><br />
+                <input /><br />
+                <button class='next'>next</button>
+                <button class='previous'>previous</button>
+            </div>
+        </form>
+        <button id='slide1'>slide to 1</button>
+        <button id='slide2'>slide to 2</button>
+        <button id='slide3'>slide to 3</button>
+    </body>
+</html>
