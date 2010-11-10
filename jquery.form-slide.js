@@ -55,6 +55,7 @@
   var _s; // settings
   var _v; // values
   var _f; // formslide form container
+  var _scroll; // scrollbar width
 
   $.fn.formslide = function(params) {
     initialize($(this), params);
@@ -93,11 +94,11 @@
     _v.padding = _v.paddingLeft + _v.paddingRight
 
     _v.step = _f.innerWidth() + scrollbarWidth();
-    _v.width = _v.step - _v.padding;
+    _v.width = _f.innerWidth() - _v.padding;
 
-    _v.count = _f.find('.formslide div').size();
+    _v.count = _f.find('.formslide > div').size();
     // margin-left + step width makes things 1 based
-    _v.current = ((parseInt(_f.children('.formslide').css('margin-left')) + _v.step) / _v.step)
+    _v.current = ((parseInt(_f.children('.formslide').css('margin-left') + _v.paddingLeft) + _v.step) / _v.step)
   }
 
   function viewport(elm) {
@@ -113,10 +114,16 @@
   }
 
   function styles() {
-    _f.find('.formslide div').
+    // copy left/right padding from the viewport to each step div
+    _f.
+      find('.formslide > div').
         width(_v.width).
-        css('margin-right', _v.padding).
+        css('padding-left', _v.paddingLeft).
+        css('padding-right', _v.paddingRight). // don't copy down padding-left, since that is still applied by formslide-viewport
+        css('margin-right', scrollbarWidth()).
         css('float', 'left').end().
+      find('.formslide > div:first').
+        css('margin-left', -_v.paddingLeft).end().
       find('.formslide').
         width(_v.step * _v.count);
   }
@@ -203,12 +210,17 @@
   // helpers
 
   function scrollbarWidth() {
+    if (_scroll) return _scroll;
+
     document.body.style.overflow = 'hidden';
     var width = document.body.clientWidth;
     document.body.style.overflow = 'scroll';
     width -= document.body.clientWidth;
     if(!width) width = document.body.offsetWidth-document.body.clientWidth;
     document.body.style.overflow = '';
+
+    _scroll = width;
+
     return width;
   }
 
